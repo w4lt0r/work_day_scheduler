@@ -23,12 +23,48 @@
 //});
 
 function app() {
-  const currentDayDisplay = document.getElementById("currentDay");
   console.log("working");
-  const currentDate = dayjs().format();
-  currentDayDisplay.innerHTML = currentDate;
+  const currentDate = dayjs().format("dddd DD, MMMM, YYYY");
+
+  const currentDayDisplay = $("#currentDay").text(currentDate)
+
   console.log(currentDate);
   console.log(currentDayDisplay);
+
+  const currentHour = dayjs().hour()
+  console.log(currentHour)
+
+  const timeBlocks = $(".time-block")
+  timeBlocks.each(function () {
+    const block = $(this)
+    const blockHour = block.attr("id").split("-")[1]
+    console.log(block)
+    if (blockHour < currentHour) {
+      $(this).addClass("past")
+      $(this).removeClass("present")
+      $(this).removeClass("future")
+    }
+    if (blockHour === currentHour) {
+      $(this).addClass("present")
+      $(this).removeClass("past")
+      $(this).removeClass("future")
+    }
+    if (blockHour > currentHour) {
+      $(this).addClass("future")
+      $(this).removeClass("present")
+      $(this).removeClass("past")
+    }
+
+    $(".saveBtn").on("click", function () {
+      const userInput = $(this).siblings(".description").val()
+      const userKey = $(this).parent().attr("id")
+      console.log(userInput);
+      console.log(userKey);
+      localStorage.setItem(userKey, userInput);
+      $(this).val(localStorage.getItem(userKey))
+
+    })
+  })
 }
 
 app()
